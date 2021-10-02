@@ -7,10 +7,6 @@ If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
 	Exit
 }
 
-Write-Output "Installing Chocolatey"
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-choco install chocolatey-core.extension, brave, firefox, vlc, 7zip, speedcrunch -y
-
 
 Write-Host "Creating Restore Point incase something bad happens"
 
@@ -378,19 +374,14 @@ ForEach ($type in @("Paint.Picture", "giffile", "jpegfile", "pngfile")) {
 }
 Write-Output "Enabling Ctrl+Alt+Del requirement before login..."
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "DisableCAD" -Type DWord -Value 0
-Write-Output "Unpinning all Start Menu tiles..."
-If ([System.Environment]::OSVersion.Version.Build -ge 15063 -And [System.Environment]::OSVersion.Version.Build -le 16299) {
-    Get-ChildItem -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount" -Include "*.group" -Recurse | ForEach-Object {
-        $data = (Get-ItemProperty -Path "$($_.PsPath)\Current" -Name "Data").Data -Join ","
-        $data = $data.Substring(0, $data.IndexOf(",0,202,30") + 9) + ",0,202,80,0,0"
-        Set-ItemProperty -Path "$($_.PsPath)\Current" -Name "Data" -Type Binary -Value $data.Split(",")
-    }
-} ElseIf ([System.Environment]::OSVersion.Version.Build -eq 17133) {
-    $key = Get-ChildItem -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount" -Recurse | Where-Object { $_ -like "*start.tilegrid`$windows.data.curatedtilecollection.tilecollection\Current" }
-    $data = (Get-ItemProperty -Path $key.PSPath -Name "Data").Data[0..25] + ([byte[]](202,50,0,226,44,1,1,0,0))
-    Set-ItemProperty -Path $key.PSPath -Name "Data" -Type Binary -Value $data
-}
 
+Write-Output "Disable Live Tiles"
+(New-Object -Com Shell.Application).
+    NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').
+    Items() |
+  %{ $_.Verbs() } |
+  ?{$_.Name -match 'Un.*pin from Start'} |
+  %{$_.DoIt()}
 
 Write-Output "Restarting..."
 Restart-Computer
