@@ -1,27 +1,7 @@
-:construction: This is currently being built and modified to be a completely different script. :construction:
-
-# Fork - do not use for now!
-
-
-
-### Old
-``` markdown
-# Ultimate Windows 10 Script
-This script is the culmination of many scripts and gists from github with features of my own. I am building this script to be a swiss army knife of Windows tools to help setup and optimize machines.
-
-## My Additions
-- One command to run
-- Full GUI implementation
-- Winget install
-- Install popular programs with one click
-- O&O Shutup 10 CFG and Run
-- Dark/Light mode
-- Semi-configurable
+This is my own pwoershell script to clean up windows 10 and make it run better. It does nto give you any options, it is just my preferences.
 
 ## How to Run
 Paste this command into Powershell (admin):
-`iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/MaxAFriedrich/win10script/master/win10debloat.ps1'))`
-
-For complete details check out https://christitus.com/debloat-windows-10-2020/
-
+``` powershell
+iex ((New-Object System.Net.WebClient).DownloadString('https://git.io/J28Ea'))
 ```
