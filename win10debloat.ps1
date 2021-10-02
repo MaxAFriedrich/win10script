@@ -372,8 +372,6 @@ ForEach ($type in @("Paint.Picture", "giffile", "jpegfile", "pngfile")) {
     Set-ItemProperty -Path $("HKCR:\$type\shell\open") -Name "MuiVerb" -Type ExpandString -Value "@%ProgramFiles%\Windows Photo Viewer\photoviewer.dll,-3043"
     Set-ItemProperty -Path $("HKCR:\$type\shell\open\command") -Name "(Default)" -Type ExpandString -Value "%SystemRoot%\System32\rundll32.exe `"%ProgramFiles%\Windows Photo Viewer\PhotoViewer.dll`", ImageView_Fullscreen %1"
 }
-Write-Output "Enabling Ctrl+Alt+Del requirement before login..."
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "DisableCAD" -Type DWord -Value 0
 
 Write-Output "Disable Live Tiles"
 (New-Object -Com Shell.Application).
