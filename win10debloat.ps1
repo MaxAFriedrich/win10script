@@ -17,6 +17,9 @@ Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTI
 Write-Host "Installing Brave..."
 Invoke-WebRequest -Uri "https://laptop-updates.brave.com/latest/winx64" -OutFile $env:USERPROFILE\Downloads\brave.exe
 ~/Downloads/brave.exe
+Write-Host "Installing Firefox,7Zip,VLC..."
+Invoke-WebRequest -Uri "https://ninite.com/7zip-firefox-vlc/ninite.exe" -OutFile $env:USERPROFILE\Downloads\ninite.exe
+~/Downloads/ninite.exe
 
 
 
@@ -433,6 +436,11 @@ ForEach ($type in @("Paint.Picture", "giffile", "jpegfile", "pngfile")) {
     Set-ItemProperty -Path $("HKCR:\$type\shell\open\command") -Name "(Default)" -Type ExpandString -Value "%SystemRoot%\System32\rundll32.exe `"%ProgramFiles%\Windows Photo Viewer\PhotoViewer.dll`", ImageView_Fullscreen %1"
 }
 
+#Enabling Ctrl+Alt+Del requirement before login...
+Write-Output "Enabling Ctrl+Alt+Del requirement before login..."
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "DisableCAD" -Type DWord -Value 0
+
+
 Write-Output "Disable Live Tiles"
 $START_MENU_LAYOUT = @"
 <LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" Version="1" xmlns:taskbar="http://schemas.microsoft.com/Start/2014/TaskbarLayout" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification">
@@ -495,5 +503,8 @@ Remove-Item "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk"
 Remove-Item "C:\Users\Public\Desktop\Microsoft Edge.lnk"
 
+
+Write-Output "Press any key to continue..."
+[Console]::ReadKey($true) | Out-Null
 Write-Output "Restarting..."
 Restart-Computer
