@@ -20,6 +20,9 @@ Invoke-WebRequest -Uri "https://laptop-updates.brave.com/latest/winx64" -OutFile
 Write-Host "Installing Firefox,7Zip,VLC..."
 Invoke-WebRequest -Uri "https://ninite.com/7zip-firefox-vlc/ninite.exe" -OutFile $env:USERPROFILE\Downloads\ninite.exe
 ~/Downloads/ninite.exe
+Write-Host "Installing Chocolaty"
+Invoke-WebRequest -Uri "https://community.chocolatey.org/install.ps1" -OutFile $env:USERPROFILE\Downloads\install.ps1
+& ~/Downloads/install.ps1
 
 
 
@@ -521,7 +524,7 @@ $START_MENU_LAYOUT = @"
 "@
 
 $layoutFile = "C:\Windows\StartMenuLayout.xml"
-
+$START_MENU_LAYOUT > $layoutFile
 #Delete layout file if it already exists
 If (Test-Path $layoutFile) {
     Remove-Item $layoutFile
@@ -543,6 +546,7 @@ foreach ($regAlias in $regAliases) {
     Set-ItemProperty -Path $keyPath -Name "StartLayoutFile" -Value $layoutFile
 }
 
+Export-StartLayout -UseDesktopApplicationID -Path $layoutFile
 #Restart Explorer, open the start menu (necessary to load the new layout), and give it a few seconds to process
 Stop-Process -name explorer
 Start-Sleep -s 5
@@ -693,6 +697,7 @@ $Bloatware = @(
     "*Microsoft.MicrosoftStickyNotes*"
     "*Microsoft.Windows.Photos*"
     "*Microsoft.WindowsStore*"
+    "Microsoft.549981C3F5F10"
 )
 
 
@@ -728,11 +733,17 @@ $ResultText.text = "`r`n" + "`r`n" + "Adjusted VFX for performance"
 
 
 
+Write-Output "Delete PC Health Check"
+$pchealthcheck = Get-WmiObject -Class Win32_Product | Where-Object { $_.Name -eq "Windows PC Health Check" }
+$pchealthcheck.Uninstall()
+
+
 Write-Output "Disable Edge"
 Remove-Item "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk"
 Remove-Item "C:\Users\Public\Desktop\Microsoft Edge.lnk"
-
+Remove-Item "C:\Users\%USERNAME%\Desktop\Microsoft Edge.lnk"
+Remove-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Recurse -Force
 
 # Write-Output "Press any key to continue..."
 # [Console]::ReadKey($true) | Out-Null
