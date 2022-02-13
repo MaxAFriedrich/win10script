@@ -156,6 +156,12 @@ If (!(Test-Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanc
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" -Name "PeopleBand" -Type DWord -Value 0
 Write-Host "Hide tray icons..."
 Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" -Name "EnableAutoTray" -Type DWord -Value 1
+Write-Host "Hide Chat"
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarMn" -Type DWord -Value 0
+Write-Host "Show Tray"
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" -Name "EnableAutoTray" -Type DWord -Value 0
+# shell:::{05d7b0f4-2121-4eff-bf6b-ed3f69b894d9}
+
 Write-Host "Enabling NumLock after startup..."
 If (!(Test-Path "HKU:")) {
     New-PSDrive -Name HKU -PSProvider Registry -Root HKEY_USERS | Out-Null
@@ -742,7 +748,13 @@ Write-Output "Disable Edge"
 Remove-Item "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 Remove-Item "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk"
 Remove-Item "C:\Users\Public\Desktop\Microsoft Edge.lnk"
-Remove-Item "C:\Users\%USERNAME%\Desktop\Microsoft Edge.lnk"
+# Get users
+$users = Get-ChildItem -Path "C:\Users"
+
+# Loop through users and delete the file
+$users | ForEach-Object {
+    Remove-Item -Path "C:\Users\$($_.Name)\Desktop\Microsoft Edge.lnk" -Force
+}
 Remove-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Recurse -Force
 
 # Write-Output "Press any key to continue..."
