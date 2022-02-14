@@ -766,4 +766,4 @@ Remove-Item "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" 
 # Write-Output "Press any key to continue..."
 # [Console]::ReadKey($true) | Out-Null
 # Write-Output "Restarting..."
-# Restart-Computer
+Restart-Computer
