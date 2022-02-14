@@ -17,20 +17,18 @@ Write-Host "Install Chocolatey, 7Zip, firefox, vlc, brave..."
 
 $Packages = '7zip', 'firefox', 'vlc', 'brave'
  
-If(Test-Path -Path "$env:ProgramData\Chocolatey") {
-  # DoYourPackageInstallStuff
-  ForEach ($PackageName in $Packages)
-    {
+If (Test-Path -Path "$env:ProgramData\Chocolatey") {
+    # DoYourPackageInstallStuff
+    ForEach ($PackageName in $Packages) {
         choco install $PackageName -y
     }
 }
 Else {
-  # InstallChoco
-  Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))      
+    # InstallChoco
+    Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))      
 
-  # DoYourPackageInstallStuff
-  ForEach ($PackageName in $Packages)
-    {
+    # DoYourPackageInstallStuff
+    ForEach ($PackageName in $Packages) {
         choco install $PackageName -y
     }
 }
@@ -542,8 +540,8 @@ $START_MENU_LAYOUT = @"
 $layoutFile = "C:\Windows\StartMenuLayout.xml"
 $START_MENU_LAYOUT > $layoutFile
 
- Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "StartLayoutFile" -Value $layoutFile
- Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "StartLayoutFile" -Value $layoutFile
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "StartLayoutFile" -Value $layoutFile
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "StartLayoutFile" -Value $layoutFile
 
 # $regAliases = @("HKLM", "HKCU")
 
