@@ -13,12 +13,27 @@ Enable-ComputerRestore -Drive "C:\"
 Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
 
 #install progs
-Write-Host "Installing Brave..."#TODO make brave better
-Invoke-WebRequest -Uri "https://laptop-updates.brave.com/latest/winx64" -OutFile $env:USERPROFILE\Downloads\brave.exe
-~/Downloads/brave.exe
-Write-Host "Installing Firefox,7Zip,VLC..."
-Invoke-WebRequest -Uri "https://ninite.com/7zip-firefox-vlc/ninite.exe" -OutFile $env:USERPROFILE\Downloads\ninite.exe
-~/Downloads/ninite.exe
+Write-Host "Install Chocolatey, 7Zip, firefox, vlc, brave..."
+
+$Packages = '7zip', 'firefox', 'vlc', 'brave'
+ 
+If(Test-Path -Path "$env:ProgramData\Chocolatey") {
+  # DoYourPackageInstallStuff
+  ForEach ($PackageName in $Packages)
+    {
+        choco install $PackageName -y
+    }
+}
+Else {
+  # InstallChoco
+  Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))      
+
+  # DoYourPackageInstallStuff
+  ForEach ($PackageName in $Packages)
+    {
+        choco install $PackageName -y
+    }
+}
 
 
 

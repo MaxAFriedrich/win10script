@@ -6,6 +6,6 @@ Paste this command into Powershell (admin):
 iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/MaxAFriedrich/win10script/master/win10debloat.ps1'))
 ```
 Or, shorter:
-```
+``` powershell
 iwr -useb https://raw.githubusercontent.com/MaxAFriedrich/win10script/master/win10debloat.ps1 | iex
 ```
