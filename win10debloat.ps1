@@ -21,10 +21,11 @@ Write-Host "Installing Firefox,7Zip,VLC..."
 Invoke-WebRequest -Uri "https://ninite.com/7zip-firefox-vlc/ninite.exe" -OutFile $env:USERPROFILE\Downloads\ninite.exe
 ~/Downloads/ninite.exe
 Write-Host "Installing Chocolaty"
-Invoke-WebRequest -Uri "https://community.chocolatey.org/install.ps1" -OutFile $env:USERPROFILE\Downloads\install.ps1
-& ~/Downloads/install.ps1
-
-
+# Invoke-WebRequest -Uri "https://community.chocolatey.org/install.ps1" -OutFile $env:USERPROFILE\Downloads\install.ps1
+# & ~/Downloads/install.ps1
+if (!(Test-Path -Path "$env:ProgramData\Chocolatey")) {
+  Invoke-Expression((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+}
 
 
 # OOSU10
@@ -531,48 +532,44 @@ $START_MENU_LAYOUT = @"
 
 $layoutFile = "C:\Windows\StartMenuLayout.xml"
 $START_MENU_LAYOUT > $layoutFile
-#Delete layout file if it already exists
-If (Test-Path $layoutFile) {
-    Remove-Item $layoutFile
-}
 
-#Creates the blank layout file
-$START_MENU_LAYOUT | Out-File $layoutFile -Encoding ASCII
+ Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "StartLayoutFile" -Value $layoutFile
+ Set-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "StartLayoutFile" -Value $layoutFile
 
-$regAliases = @("HKLM", "HKCU")
+# $regAliases = @("HKLM", "HKCU")
 
-#Assign the start layout and force it to apply with "LockedStartLayout" at both the machine and user level
-foreach ($regAlias in $regAliases) {
-    $basePath = $regAlias + ":\SOFTWARE\Policies\Microsoft\Windows"
-    $keyPath = $basePath + "\Explorer" 
-    IF (!(Test-Path -Path $keyPath)) { 
-        New-Item -Path $basePath -Name "Explorer"
-    }
-    Set-ItemProperty -Path $keyPath -Name "LockedStartLayout" -Value 1
-    Set-ItemProperty -Path $keyPath -Name "StartLayoutFile" -Value $layoutFile
-}
+# #Assign the start layout and force it to apply with "LockedStartLayout" at both the machine and user level
+# foreach ($regAlias in $regAliases) {
+#     $basePath = $regAlias + ":\SOFTWARE\Policies\Microsoft\Windows"
+#     $keyPath = $basePath + "\Explorer" 
+#     IF (!(Test-Path -Path $keyPath)) { 
+#         New-Item -Path $basePath -Name "Explorer"
+#     }
+#     Set-ItemProperty -Path $keyPath -Name "LockedStartLayout" -Value 1
+#     Set-ItemProperty -Path $keyPath -Name "StartLayoutFile" -Value $layoutFile
+# }
 
-Export-StartLayout -UseDesktopApplicationID -Path $layoutFile
-#Restart Explorer, open the start menu (necessary to load the new layout), and give it a few seconds to process
-Stop-Process -name explorer
-Start-Sleep -s 5
-$wshell = New-Object -ComObject wscript.shell; $wshell.SendKeys('^{ESCAPE}')
-Start-Sleep -s 5
+# Export-StartLayout -UseDesktopApplicationID -Path $layoutFile
+# #Restart Explorer, open the start menu (necessary to load the new layout), and give it a few seconds to process
+# Stop-Process -name explorer
+# Start-Sleep -s 5
+# $wshell = New-Object -ComObject wscript.shell; $wshell.SendKeys('^{ESCAPE}')
+# Start-Sleep -s 5
 
-#Enable the ability to pin items again by disabling "LockedStartLayout"
-foreach ($regAlias in $regAliases) {
-    $basePath = $regAlias + ":\SOFTWARE\Policies\Microsoft\Windows"
-    $keyPath = $basePath + "\Explorer" 
-    Set-ItemProperty -Path $keyPath -Name "LockedStartLayout" -Value 0
-}
+# #Enable the ability to pin items again by disabling "LockedStartLayout"
+# foreach ($regAlias in $regAliases) {
+#     $basePath = $regAlias + ":\SOFTWARE\Policies\Microsoft\Windows"
+#     $keyPath = $basePath + "\Explorer" 
+#     Set-ItemProperty -Path $keyPath -Name "LockedStartLayout" -Value 0
+# }
 
-#Restart Explorer and delete the layout file
-Stop-Process -name explorer
+# #Restart Explorer and delete the layout file
+# Stop-Process -name explorer
 
-# Uncomment the next line to make clean start menu default for all new users
-Import-StartLayout -LayoutPath $layoutFile -MountPath $env:SystemDrive\
+# # Uncomment the next line to make clean start menu default for all new users
+# Import-StartLayout -LayoutPath $layoutFile -MountPath $env:SystemDrive\
+# $START_MENU_LAYOUT > $layoutFile
 
-Remove-Item $layoutFile
 
 Write-Host "Search and Start Menu Tweaks Complete"
 $ResultText.text = "`r`n" + "`r`n" + "Search and Start Menu Tweaks Complete"
