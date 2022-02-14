@@ -3,9 +3,9 @@ This is my own powershell script to clean up windows 10 and make it run better. 
 ## How to Run
 Paste this command into Powershell (admin):
 ``` powershell
-iex ((New-Object System.Net.WebClient).DownloadString('https://git.io/J28Ea'))
+iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/MaxAFriedrich/win10script/master/win10debloat.ps1'))
 ```
 Or, shorter:
 ```
-iwr -useb https://git.io/J28Ea | iex
+iwr -useb https://raw.githubusercontent.com/MaxAFriedrich/win10script/master/win10debloat.ps1 | iex
 ```
