@@ -389,6 +389,8 @@ Write-Host "Enabling NumLock after startup..."
                 "Microsoft.YourPhone"
                 "Microsoft.Getstarted"
                 "Microsoft.MicrosoftOfficeHub"
+                "*Microsoft.WindowsCamera*"
+                "*Microsoft.Xbox*"
 
                 #Sponsored Windows 10 AppX Apps
                 #Add sponsored/featured apps to remove in the "*AppName*" format
