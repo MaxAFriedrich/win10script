@@ -593,5 +593,3 @@ $EdgeSetupPath = ${env:ProgramFiles(x86)} + '\Microsoft\Edge\Application\' + $Ed
 & $EdgeSetupPath --uninstall --system-level --verbose-logging --force-uninstall
 
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\EdgeUpdate" -Name "DoNotUpdateToEdgeWithChromium" -Type DWord -Value 1
-
-Restart-Computer
